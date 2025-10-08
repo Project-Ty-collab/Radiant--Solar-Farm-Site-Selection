@@ -42,7 +42,7 @@ export default function MapComponent() {
           },
           showArea: false,
         },
-        polygon: false,
+        polygon: true,
         polyline: false,
         circle: false,
         marker: false,
@@ -63,6 +63,15 @@ export default function MapComponent() {
       const sw = bounds.getSouthWest();
       const ne = bounds.getNorthEast();
 
+      let coordinates = [];
+      if (layer instanceof L.Rectangle || layer instanceof L.Polygon) {
+        const latlngs = layer.getLatLngs()[0];
+        coordinates = latlngs.map((point) => ({
+          lat: point.lat.toFixed(5),
+          lng: point.lng.toFixed(5),
+        }));
+      }
+
       // Dummy calculations for area and perimeter
       const latDiff = Math.abs(ne.lat - sw.lat);
       const lngDiff = Math.abs(ne.lng - sw.lng);
@@ -72,6 +81,7 @@ export default function MapComponent() {
       setAreaData({
         area,
         perimeter,
+        coordinates,
       });
     });
 
@@ -90,47 +100,68 @@ export default function MapComponent() {
     };
   }, []);
 
-  return (
-    <div className="flex h-[calc(100vh-64px)]">
-      {/* Left 50% - Map */}
-      <div id="map" className="w-1/2 h-full"></div>
+    return (
+  <div className="flex h-screen">
+      {/* LEFT: MAP */}
+      <div id="map" className="w-4/6 h-full shadow-inner"></div>
 
-      {/* Right 50% - Info Panel */}
-      <div className="w-1/2 bg-white p-8 flex flex-col justify-center">
+      {/* RIGHT: DASHBOARD */}
+      <div className="w-3/6 bg-gray-100 p-8 overflow-y-auto shadow-lg flex flex-col justify-center">
         {!areaData ? (
           <>
-            <h1 className="text-3xl font-bold text-orange-600 mb-3">
-              Welcome to the Radiant
+            <h1 className="text-3xl font-bold text-orange-600 mb-4">
+              ☀️ Welcome to Radiant
             </h1>
-            <p className="text-gray-700 mb-2 leading-relaxed">
-              Start exploring solar potential by drawing a rectangle on the map.
-            </p>
-            <p className="text-gray-700 leading-relaxed">
-              Select sites, draw rectangles or polygons using map controls to analyze area.
-            </p>
+            <div className="bg-white p-6 rounded-2xl shadow-md space-y-3">
+              <p className="text-gray-700 leading-relaxed">
+                Start exploring solar farm sites by <b>drawing a rectangle</b> on the map.
+              </p>
+              <p className="text-gray-700 leading-relaxed">
+                You can also select multiple sites using <b>polygon tools</b> for deeper analysis.
+              </p>
+            </div>
           </>
         ) : (
           <>
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-              Selected Area Details
+              🟢 Selected Area Details
             </h2>
-            <p className="text-gray-700 mb-2">
-              <b>Area:</b> {areaData.area} km²
-            </p>
-            <p className="text-gray-700 mb-2">
-              <b>Perimeter:</b> {areaData.perimeter} km
-            </p>
-            <button
-              onClick={() => setAreaData(null)}
-              className="mt-4 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm"
-            >
-              Clear Selection
-            </button>
+
+            <div className="bg-white p-6 rounded-2xl shadow-md space-y-3">
+              <p>
+                <span className="font-semibold text-gray-800">Area:</span>{" "}
+                {areaData.area} km²
+              </p>
+              <p>
+                <span className="font-semibold text-gray-800">Perimeter:</span>{" "}
+                {areaData.perimeter} km
+              </p>
+
+              <div>
+                <span className="font-semibold text-gray-800">Coordinates:</span>
+                <ul className="mt-2 text-sm text-gray-700 space-y-1 max-h-40 overflow-y-auto">
+                  {areaData.coordinates.map((c, i) => (
+                    <li key={i}>
+                      Lat: {c.lat}, Lng: {c.lng}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <button
+                onClick={() => setAreaData(null)}
+                className="mt-4 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-sm font-medium shadow-md transition-all duration-300"
+              >
+                Clear Selection
+              </button>
+            </div>
           </>
         )}
       </div>
     </div>
-  );
+);
+
+  
 }
 
 /*
