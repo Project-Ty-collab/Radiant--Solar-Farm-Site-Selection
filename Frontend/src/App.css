@@ -1,1 +1,50 @@
+<<<<<<< HEAD
 @import "tailwindcss";
+=======
+@import "tailwindcss";
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 30%;
+  background: #f9fafb; /* light background for panel */
+  z-index: 10;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.map-container {
+  width: 70%;
+  height: 100%;
+  position: fixed;
+  right: 0;
+  top: 60px; /* height of navbar */
+  bottom: 0;
+  z-index: 1;
+}
+
+.leaflet-container {
+  height: calc(100vh - 60px);
+  width: 100%;
+  z-index: 1;
+}
+
+/* ensure leaflet buttons visible */
+.leaflet-control-container {
+  z-index: 1000 !important;
+}
+>>>>>>> b535cb8 (Update MapComponent: fixed rectangle drawing and 50-50 layout)
