@@ -1,6 +1,5 @@
-<<<<<<< HEAD
+
 @import "tailwindcss";
-=======
 @import "tailwindcss";
 
 html,
@@ -47,4 +46,4 @@ body,
 .leaflet-control-container {
   z-index: 1000 !important;
 }
->>>>>>> b535cb8 (Update MapComponent: fixed rectangle drawing and 50-50 layout)
+
